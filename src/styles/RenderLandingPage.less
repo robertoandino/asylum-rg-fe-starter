@@ -41,16 +41,55 @@
     font-size: 1.2rem;
 }
 
-// .graphs-section {
-//  ADD THIS BACK IN WHEN YOU HAVE THE GRAPHS SECTION
-// }
+.graphs-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    margin-bottom: 50px;
+}
+
+.graph {
+    flex: 1;
+    margin: 0 10px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.graph-img {
+    width: 400px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.graph-circle {
+    width: 260px;
+    height: 260px;
+    object-fit: cover;
+}
+
+.graph-text {
+    margin-top: 15px;
+    font-size: 30px;
+    text-align: center;
+    color: black;
+}
 
 .view-more-data-btn-container {
-    height: 44px;
-    width: 180px;
+    padding: 300x 300px;
+    height: auto;
+    width: 320px;
+    font-size: 30px;
     margin: 0 auto;
     text-align: center;
     margin-bottom: 10%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .middle-section {
