@@ -10,7 +10,7 @@ import YearLimitsSelect from './YearLimitsSelect';
 import ViewSelect from './ViewSelect';
 import axios from 'axios';
 import { resetVisualizationQuery } from '../../../state/actionCreators';
-import test_data from '../../../data/test_data.json';
+//import test_data from '../../../data/test_data.json';
 import { colors } from '../../../styles/data_vis_colors';
 import ScrollToTopOnMount from '../../../utils/scrollToTopOnMount';
 
@@ -79,7 +79,6 @@ function GraphWrapper(props) {
     
 
         const end = view === 'time-series' ? 'fiscalSummary' : 'citizenshipSummary';
-        console.log("end: " + end);
 
         if (office === 'all' || !office) {
           axios
@@ -93,8 +92,13 @@ function GraphWrapper(props) {
             .then(result => {
               if(end === 'fiscalSummary'){
                 stateSettingCallback(view, office, [result.data]); // <-- `test_data` here can be simply replaced by `result.data` in prod!
+                api1 = result.data;
+
               }else{
-                stateSettingCallback(view, office, result.data);
+
+                //add citizenship data to first object that contains other data necessary
+                api1.citizenshipResults = api2;
+                stateSettingCallback(view, office, [api1]);
               }
             })
             .catch(err => {
