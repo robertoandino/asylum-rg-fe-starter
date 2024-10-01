@@ -10,12 +10,14 @@ import YearLimitsSelect from './YearLimitsSelect';
 import ViewSelect from './ViewSelect';
 import axios from 'axios';
 import { resetVisualizationQuery } from '../../../state/actionCreators';
-//import test_data from '../../../data/test_data.json';
+import test_data from '../../../data/test_data.json';
 import { colors } from '../../../styles/data_vis_colors';
 import ScrollToTopOnMount from '../../../utils/scrollToTopOnMount';
 
 const { background_color } = colors;
 const Real_Production_URL = "https://hrf-asylum-be-b.herokuapp.com/cases";
+let api1 = [];
+let api2 = [];
 
 function GraphWrapper(props) {
   const { set_view, dispatch } = props;
@@ -74,42 +76,66 @@ function GraphWrapper(props) {
     
     */
 
-    if (office === 'all' || !office) {
-      axios
-        .get(`${Real_Production_URL}/fiscalSummary`, {
-          // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
-          params: {
-            from: years[0],
-            to: years[1],
-          },
-        })
-        .then(result => {
-          stateSettingCallback(view, office, [result.data]); // <-- `test_data` here can be simply replaced by `result.data` in prod!
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    } else {
-      axios
-        .get(`${Real_Production_URL}/fiscalSummary`, {
-          // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
-          params: {
-            from: years[0],
-            to: years[1],
-            office: office,
-          },
-        })
-        .then(result => {
-          stateSettingCallback(view, office, [result.data]); // <-- `test_data` here can be simply replaced by `result.data` in prod!   
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    }
+    
+
+        const end = view === 'time-series' ? 'fiscalSummary' : 'citizenshipSummary';
+        console.log("end: " + end);
+
+        if (office === 'all' || !office) {
+          axios
+            .get(`${Real_Production_URL}/${end}`, {
+              // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
+              params: {
+                from: years[0],
+                to: years[1],
+              },
+            })
+            .then(result => {
+              if(end === 'fiscalSummary'){
+                stateSettingCallback(view, office, [result.data]); // <-- `test_data` here can be simply replaced by `result.data` in prod!
+              }else{
+                stateSettingCallback(view, office, result.data);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        } else {
+          axios
+            .get(`${Real_Production_URL}/${end}`, {
+              // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
+              params: {
+                from: years[0],
+                to: years[1],
+                office: office,
+              },
+            })
+            .then(result => {
+              if(end === 'fiscalSummary'){
+            
+                api1 = result.data;
+                stateSettingCallback(view, office, [result.data]); // <-- `test_data` here can be simply replaced by `result.data` in prod!
+                
+              }else{
+              
+                api2 = result.data;
+                //add citizenship data to first object that contains other data necessary
+                api1.citizenshipResults = api2;
+                
+                stateSettingCallback(view, office, [api1]);
+              }
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+        
+    
   }
   const clearQuery = (view, office) => {
     dispatch(resetVisualizationQuery(view, office));
   };
+
   return (
     <div
       className="map-wrapper-container"
