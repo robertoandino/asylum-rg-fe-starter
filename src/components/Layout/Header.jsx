@@ -3,10 +3,29 @@ import { Image } from 'antd';
 import { Link } from 'react-router-dom';
 import Logo from '../../styles/Images/WhiteLogo.png';
 import { colors } from '../../styles/data_vis_colors';
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutButton from "../pages/Profile/logout-button";
+import LoginButton from "../pages/Profile/login-button";
+import { Nav } from "react-bootstrap";
+
 
 const { primary_accent_color } = colors;
 
+const AuthNav = () => {
+  const { isAuthenticated } = useAuth0();
+
+  return (
+    <Nav>
+      {isAuthenticated ? <LogoutButton />: <LoginButton /> }
+    </Nav>
+  );
+
+};
+
 function HeaderContent() {
+
+  const { isAuthenticated } = useAuth0();
+
   return (
     <div
       style={{
@@ -22,15 +41,20 @@ function HeaderContent() {
         </a>
       </div>
       <div>
-        <Link to="/" style={{ color: '#E2F0F7', paddingRight: '75px' }}>
+        <Link to="/" style={{ color: '#E2F0F7', paddingRight: '40px' }}>
           Home
         </Link>
-        <Link to="/graphs" style={{ color: '#E2F0F7' }}>
+        <Link to="/graphs" style={{ color: '#E2F0F7', paddingRight: '40px' }}>
           Graphs
         </Link>
+        {isAuthenticated && (
+          <Link to="/profile" style={{ color: '#E2F0F7', paddingRight: '40px' }}>
+          Profile 
+          </Link>
+        )}
       </div>
     </div>
   );
 }
 
-export { HeaderContent };
+export { HeaderContent, AuthNav };

@@ -96,6 +96,7 @@ function GraphWrapper(props) {
 
               }else{
 
+                api2 = result.data;
                 //add citizenship data to first object that contains other data necessary
                 api1.citizenshipResults = api2;
                 stateSettingCallback(view, office, [api1]);

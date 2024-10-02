@@ -10,9 +10,11 @@ import {
 import 'antd/dist/antd.less';
 import { NotFoundPage } from './components/pages/NotFound';
 import { LandingPage } from './components/pages/Landing';
+import { ProfilePage } from './components/pages/Profile';
+import Auth0ProviderWithHistory from "./components/pages/Profile/auth0-provider-with-history";
 
 import { FooterContent, SubFooter } from './components/Layout/Footer';
-import { HeaderContent } from './components/Layout/Header';
+import { HeaderContent, AuthNav } from './components/Layout/Header';
 
 // import { TablePage } from './components/pages/Table';
 
@@ -28,11 +30,13 @@ const { primary_accent_color } = colors;
 const store = configureStore({ reducer: reducer });
 ReactDOM.render(
   <Router>
-    <Provider store={store}>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </Provider>
+      <Provider store={store}>
+        <React.StrictMode>
+          <Auth0ProviderWithHistory>
+            <App />
+          </Auth0ProviderWithHistory>
+        </React.StrictMode>
+      </Provider>
   </Router>,
   document.getElementById('root')
 );
@@ -50,10 +54,12 @@ export function App() {
         }}
       >
         <HeaderContent />
+        <AuthNav />
       </Header>
       <Switch>
         <Route path="/" exact component={LandingPage} />
         <Route path="/graphs" component={GraphsContainer} />
+        <Route path="/profile" component={ProfilePage} />
         <Route component={NotFoundPage} />
       </Switch>
       <Footer
